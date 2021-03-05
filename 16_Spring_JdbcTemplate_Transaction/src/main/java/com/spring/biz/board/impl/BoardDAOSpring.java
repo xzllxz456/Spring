@@ -1,0 +1,76 @@
+package com.spring.biz.board.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.spring.biz.board.BoardVO;
+
+
+// 스프링 JDBC JdbcTemplate 주입받아서(DI) 처리
+@Repository
+public class BoardDAOSpring {
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	// SQL 문 
+//	private final String BOARD_INSERT = 
+//			"INSERT INTO BOARD (SEQ, TITLE, WRITER, CONTENT) "
+//			+ " VALUES ((SELECT NVL(MAX(SEQ),0) + 1 FROM BOARD), ?, ?, ?) ";
+	private final String BOARD_INSERT = 
+			"INSERT INTO BOARD (SEQ, TITLE, WRITER, CONTENT) "
+			+ " VALUES (?, ?, ?, ?) ";
+	
+	private final String BOARD_UPDATE = 
+			"UPDATE BOARD SET TITLE = ?, CONTENT = ? WHERE SEQ = ?";
+	
+	private final String BOARD_DELETE = 
+			"DELETE FROM BOARD WHERE SEQ = ?";
+	
+	private final String BOARD_GET = 
+			"SELECT * FROM BOARD WHERE SEQ = ?";
+	
+	private final String BOARD_LIST = 
+			"SELECT * FROM BOARD ORDER BY SEQ DESC";
+	
+	public BoardDAOSpring() {
+		System.out.println(">>> BoardDAO() 객체 생성");
+	}
+	
+	// 글 입력
+	public void insertBoard(BoardVO vo) {
+		System.out.println("===> Spring JdbcTemplate로 insertBoard() 실행");
+		
+		//Object[] args = {vo.getTitle(), vo.getWriter(), vo.getContent()};
+		//super.getJdbcTemplate().update(BOARD_INSERT, args);
+		
+		jdbcTemplate.update(BOARD_INSERT, vo.getSeq(), vo.getTitle(), vo.getWriter(), vo.getContent());
+	}
+	
+	//게시글 1개 조회
+	public BoardVO getBoard(BoardVO vo) {
+		System.out.println("===> Spring  JdbcTemplate로 getBoard() 실행");
+		Object[] args = {vo.getSeq()};
+		return jdbcTemplate.queryForObject(BOARD_GET, args, new BoardRowMapper());
+		//return super.getJdbcTemplate().queryForObject(BOARD_GET, BoardVO.class, vo.getSeq());
+	}
+	
+	public void deleteBoard(BoardVO vo) {
+		System.out.println("===> Spring  JdbcTemplate로 deleteBoard() 실행");
+		jdbcTemplate.update(BOARD_DELETE, vo.getSeq());
+	}
+	
+	public void updateBoard(BoardVO vo) {
+		System.out.println("===> Spring  JdbcTemplate로 updateBoard() 실행");
+		jdbcTemplate.update(BOARD_UPDATE, vo.getTitle(), vo.getContent(), vo.getSeq());
+	}
+	
+	// 게시글 전체 조회
+	public List<BoardVO> getBoardList() {
+		System.out.println("===> Spring JdbcTemplate로 getBoardList() 실행");
+		
+		return jdbcTemplate.query(BOARD_LIST, new BoardRowMapper());
+	}
+}

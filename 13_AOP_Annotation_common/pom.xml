@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.spring</groupId>
-	<artifactId>aop_joinpoint</artifactId>
-	<name>11_AOP_JoinPoint</name>
+	<artifactId>aop_Annotation_common</artifactId>
+	<name>13_aop_Annotation_common</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
